@@ -1,0 +1,81 @@
+{% load tasks_extras %}
+{% load static %}
+ <!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/css/materialize.min.css">
+
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body>
+
+
+      <ul id="dropdown1" class="dropdown-content">
+        <li><a href="/">Beginning of time</a></li>
+        <li><a href="?date=today">Today</a></li>
+        <li><a href="?date=thisweek">This Week</a></li>
+        <li><a href="?date=nextweek">Next Week</a></li>
+        <li><a href="?date=overdue">Overdue</a></li>
+      </ul>
+      <nav>
+        <div class="nav-wrapper blue">
+          <a href="#!" class="brand-logo">My To Do</a>
+          <ul class="right hide-on-med-and-down">
+            <!-- Dropdown Trigger -->
+            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Filter by Due Date<i class="material-icons right">arrow_drop_down</i></a></li>
+          </ul>
+        </div>
+      </nav>
+
+
+      <div class="row">
+        <div class="input-field col s4 offset-s3">
+          <form method="GET" action="{% url 'task-list' %}">
+            <i class="material-icons prefix">search</i>
+            <input id="searchby" type="text" name="query" class="validate">
+            <label for="searchby">Search your tasks</label>
+            
+            <input class="waves-effect waves-light blue right btn" type="submit" name="" value="Search">
+          </form>
+        </div>
+      </div>
+
+   
+      {% for task in tasks %}
+       <div class="row">
+        <div class="col s6 offset-s3">
+          <div class="card">
+            <div class="card-content">
+              <span class="new badge left" data-badge-caption="{{ task.due_date }}"></span>
+              <a class="waves-effect waves-light red right btn mark-deleted" data-href="{{ task.get_delete_url }}"><i class="material-icons">delete</i></a>
+
+              {% if task.done %}
+              <a class="waves-effect waves-light green right btn">Completed</a>
+              {% else %}
+              <a class="waves-effect waves-light right btn mark-done" data-href="{{ task.get_done_url }}">Mark Done</a>
+              {% endif %}
+              <h3>{{ task.title }}</h3>
+               <ul class="collection">
+                {% for sub_task in task.subtasks.all %}
+                  <li class="collection-item">{{ sub_task.content }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %} 
+
+      <!--JavaScript at end of body for optimized loading-->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/js/materialize.min.js"></script>
+      <script src="{% static 'js/main.js' %}"></script>
+    </body>
+  </html>
+        
